@@ -20,63 +20,71 @@ se generará un archivo de texto (.txt) con el detalle de las reservas que se de
 forma del registro completo de las opciones anteriores pero en archivo de texto.
 """
 reservas = []
-#el menu de acciones
-
+# El menú de acciones
 def mostrar_menu():
     print("Bienvenido a SurExplora")
     print("1. Registrar Reserva")
     print("2. Listar todas las reservas")
     print("3. Imprimir detalle de reservas por destino")
     print("4. Salir del programa")
-#el usuar ingresas sus datos
 
+# El usuario ingresa sus datos
 def registrar_reserva():
     nombre = input("Ingrese su nombre: ")
     apellido = input("Ingrese su apellido: ")
     ciudad = input("Ingrese su ciudad de origen: ")
     personas = int(input("Ingrese la cantidad de personas: "))
-    reserva = {"nombre": nombre, "apellido": apellido, "ciudad": ciudad, "personas": personas}
+    destino = elegir_destino()
+    reserva = {
+        "nombre": nombre,
+        "apellido": apellido,
+        "ciudad": ciudad,
+        "personas": personas,
+        "destino": destino
+    }
     reservas.append(reserva)
     print("Reserva registrada con éxito")
-# aqui muestra los posibles destinos y el usuario elige uno
-def destino():
-    catalogo =  ["torres del paine", "carretera austral", "chiloé"]
-    print(catalogo)
-    destino = input("Ingrese el destino a escoger: ").lower
-    if destino in catalogo:
-        print("Destino registrado con éxito")
-    else:
-        print("Destino no registrado")
-    reservas.append(destino(3))
 
-#aqui se muestra la lista de reservas
+# Aquí se muestra la lista de posibles destinos y el usuario elige uno
+def elegir_destino():
+    catalogo = ["torres del paine", "carretera austral", "chiloé"]
+    print("Destinos disponibles: ", catalogo)
+    destino = input("Ingrese el destino a escoger: ").lower()
+    while destino not in catalogo:
+        print("Destino no registrado. Intente nuevamente.")
+        destino = input("Ingrese el destino a escoger: ").lower()
+    print("Destino registrado con éxito")
+    return destino
 
+# Aquí se muestra la lista de reservas
 def listar_reservas():
     print("Reservas registradas:")
     for reserva in reservas:
-        print("Nombre: ", reserva["nombre"])
-        print("Apellido: ", reserva["apellido"])
-        print("Ciudad: ", reserva["ciudad"])
-        print("Destino: ", reserva["destino"])
-        print("Personas: ", reserva["personas"])
-#aqui se imprimen
+        print(f"Nombre: {reserva['nombre']}")
+        print(f"Apellido: {reserva['apellido']}")
+        print(f"Ciudad: {reserva['ciudad']}")
+        print(f"Destino: {reserva['destino']}")
+        print(f"Personas: {reserva['personas']}\n")
+
+# Aquí se imprimen los detalles de las reservas en un archivo
 def imprimir_detalle_reservas():
     try:
-        with  open("reservas.txt", "w") as archivo:
+        with open("reservas.txt", "w") as archivo:
             for reserva in reservas:
-                archivo.write("Nombre: " + reserva["nombre"] + "\n")
-                archivo.write("Apellido: " + reserva["apellido"] + "\n")
-                archivo.write("Ciudad: " + reserva["ciudad"] + "\n")
-                archivo.write("Destino: " + reserva["destino"] + "\n")
-                archivo.write("Personas: " + str(reserva["personas"]) + "\n")
-                archivo.write("\n")
-    except FileNotFoundError:
-        print("No se pudo abrir el archivo")
-#el menu definitivesta aqui
+                archivo.write(f"Nombre: {reserva['nombre']}\n")
+                archivo.write(f"Apellido: {reserva['apellido']}\n")
+                archivo.write(f"Ciudad: {reserva['ciudad']}\n")
+                archivo.write(f"Destino: {reserva['destino']}\n")
+                archivo.write(f"Personas: {reserva['personas']}\n\n")
+        print("Detalles de reservas impresos en 'reservas.txt'")
+    except Exception as e:
+        print(f"No se pudo abrir el archivo: {e}")
+
+# El menú definitivo está aquí
 def menu():
-    mostrar_menu()
-    opcion = int(input("Ingrese una opción: "))
     while True:
+        mostrar_menu()
+        opcion = input("Ingrese una opción: ")
         if opcion == "1":
             registrar_reserva()
         elif opcion == "2":
@@ -87,5 +95,6 @@ def menu():
             print("Saliendo del programa")
             break
         else:
-            print("Opción inválida")
+            print("Opción inválida, por favor intente nuevamente.")
+
 menu()
